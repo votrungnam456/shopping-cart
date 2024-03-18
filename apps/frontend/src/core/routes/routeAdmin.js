@@ -12,11 +12,6 @@ const routesAdmin = [
     exact: true,
     main: <ProductManagement></ProductManagement>,
   },
-  // {
-  //   path: "/login",
-  //   exact: true,
-  //   main: <ProductManagement></ProductManagement>,
-  // },
 ];
 
 export default routesAdmin;

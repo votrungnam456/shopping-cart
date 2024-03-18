@@ -1,12 +1,6 @@
 import AdminMaster from "../../view/admin";
-import Login from "../../view/auth/login";
 
 const routes = [
-  // {
-  //   path: '/',
-  //   exact: true,
-  //   main: <Login></Login>
-  // },
   {
     path: "/admin/*",
     exact: true,

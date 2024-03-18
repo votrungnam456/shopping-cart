@@ -2,10 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import SlideBarAdmin from "../../components/admin/slideBar";
 import routesAdmin from "../../core/routes/routeAdmin";
 import Login from "../auth/login";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import IsLoginAdmin from "../../components/auth/isLoginAdmin";
 
 const AdminMaster = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const setRoutes = () => {
     const result = routesAdmin.map((route, index) => {
       const { path, exact, main } = route;
@@ -14,7 +15,7 @@ const AdminMaster = () => {
           key={index}
           exact
           path="/"
-          element={<IsLoginAdmin isLoggedIn={true}></IsLoginAdmin>}
+          element={<IsLoginAdmin isLoggedIn={isLoggedIn}></IsLoginAdmin>}
         >
           <Route path={path} exact={exact} element={main}></Route>
         </Route>
@@ -32,7 +33,7 @@ const AdminMaster = () => {
           exact
           path="/"
           element={
-            <IsLoginAdmin isLoggedIn={true} reverse={true}></IsLoginAdmin>
+            <IsLoginAdmin isLoggedIn={isLoggedIn} reverse={true}></IsLoginAdmin>
           }
         >
           <Route path="/login" exact={true} element={<Login></Login>}></Route>

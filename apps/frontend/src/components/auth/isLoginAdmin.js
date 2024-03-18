@@ -1,6 +1,5 @@
 import React from "react";
-import { Route, Redirect, Navigate, Outlet } from "react-router-dom";
-import Login from "../../view/auth/login";
+import { Navigate, Outlet } from "react-router-dom";
 
 const IsLoginAdmin = ({ isLoggedIn, reverse = false }) => {
   let result;

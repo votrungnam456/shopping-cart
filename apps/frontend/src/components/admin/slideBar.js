@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { redirect, useNavigate } from "react-router-dom";
 
 const SlideBarAdmin = () => {
   const slideBarTemp = [
@@ -113,7 +114,7 @@ const SlideBarAdmin = () => {
     },
   ];
   const [slideBar, setSlideBar] = useState(slideBarTemp);
-
+  const navigate = useNavigate();
   // index: number
   // name: string
   /**
@@ -121,9 +122,12 @@ const SlideBarAdmin = () => {
    * @param {string} name page name
    * @return {void}
    */
-  const clickLink = async (index, name) => {
-    if (name === "Logout") {
-      // a
+  const clickLink = async (path) => {
+    console.log(path);
+    if (path === "/logout") {
+      // logout action
+    } else {
+      navigate(`/admin${path}`);
     }
   };
   /**
@@ -156,9 +160,7 @@ const SlideBarAdmin = () => {
               ? "hover:bg-pale-cerulean hover:text-cerulean-blue"
               : ""
           }`}
-          onClick={
-            !item?.subMenu ? () => clickLink(index, item.name) : () => {}
-          }
+          onClick={!item?.subMenu ? () => clickLink(item.path) : () => {}}
         >
           <li
             className="flex items-center justify-start px-[15px] text-[14px] font-bold w-full"
@@ -179,6 +181,7 @@ const SlideBarAdmin = () => {
                           ? "bg-pale-cerulean text-cerulean-blue"
                           : ""
                       }`}
+                      onClick={() => clickLink(itemSub.path)}
                     >
                       {itemSub?.label}
                     </li>
