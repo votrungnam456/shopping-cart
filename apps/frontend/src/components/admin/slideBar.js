@@ -123,7 +123,6 @@ const SlideBarAdmin = () => {
    * @return {void}
    */
   const clickLink = async (path) => {
-    console.log(path);
     if (path === "/logout") {
       // logout action
     } else {
@@ -153,11 +152,11 @@ const SlideBarAdmin = () => {
       return (
         <div
           key={index}
-          className={`py-[16px] px-0 flex items-start justify-center flex-col cursor-pointer ${
-            item.active ? "bg-pale-cerulean text-cerulean-blue" : ""
+          className={`py-[16px] px-0 flex items-start justify-center flex-col cursor-pointer text-white ${
+            item.active ? "bg-dark-electric-blue text-orange-500" : ""
           } ${
             !item.activeSub
-              ? "hover:bg-pale-cerulean hover:text-cerulean-blue"
+              ? "hover:bg-dark-electric-blue hover:text-orange-500"
               : ""
           }`}
           onClick={!item?.subMenu ? () => clickLink(item.path) : () => {}}
@@ -176,9 +175,9 @@ const SlideBarAdmin = () => {
                 return (
                   <div key={indexSub}>
                     <li
-                      className={`pl-[45px] py-[5px] text-left font-bold hover:bg-pale-cerulean hover:text-cerulean-blue cursor-pointer ${
+                      className={`pl-[45px] py-[5px] text-left font-bold hover:bg-dark-electric-blue hover:text-orange-500 cursor-pointer ${
                         itemSub.active
-                          ? "bg-pale-cerulean text-cerulean-blue"
+                          ? "bg-dark-electric-blue text-orange-500"
                           : ""
                       }`}
                       onClick={() => clickLink(itemSub.path)}
@@ -198,9 +197,9 @@ const SlideBarAdmin = () => {
     return result;
   };
   return (
-    <div className="bg-non-photo-blue min-w-[230px] h-full pt-[30px] flex flex-col justify-between overflow-y-auto">
+    <div className="bg-dark-electric-blue min-w-[230px] h-full pt-[30px] flex flex-col justify-between overflow-y-auto">
       <div>
-        <p className="font-bold text-[20px] text-black text-center">Admin</p>
+        <p className="font-bold text-[20px] text-white text-center">Admin</p>
         <ul className="pt-[20px]">{renderSlideBar()}</ul>
       </div>
     </div>

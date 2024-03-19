@@ -1,13 +1,38 @@
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+tr:nth-child(odd) {
+  background-color: #fff;
+}
 td {
-  text-align: center;
+  /* text-align: center; */
 }
 td,
 th {
   border: 1px solid black;
+  padding: 15px;
 }
 tr:hover {
   background-color: #d6eeee;
+}
+th {
+  background-color: var(--color-dark-electric-blue-2);
+}
+td {
+  background-color: #4a6176;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #394f62;
+}
+::-webkit-scrollbar-thumb {
+  background: #6d8da6;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8ab5d6;
 }

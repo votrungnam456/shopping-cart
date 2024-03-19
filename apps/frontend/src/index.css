@@ -284,6 +284,10 @@
   --color-bronze-metallic-2: #a49b64;
   --color-royal-orange: #fc8d26;
   --color-very-pale-orange: #fcd8c3;
+  --color-dark-electric-blue: #567086;
+  --color-dark-electric-blue-2: #4e657a;
+  --color-deep-space-sparkle: #435c70;
+  --color-marigold: #f5a623;
 }
 
 @tailwind base;

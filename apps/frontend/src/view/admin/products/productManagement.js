@@ -1,41 +1,15 @@
 import { useState } from "react";
 import "./productManagement.css";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const ProductManagement = () => {
-  const listProductTemp = [
-    {
-      ProductID: 1,
-      ProductName: "Áo thun nam",
-      Description:
-        "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-      Price: 200000,
-      StockQuantity: 100,
-      CategoryID: 1,
-    },
-    {
-      ProductID: 1,
-      ProductName: "Áo thun nữ",
-      Description:
-        "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-      Price: 100000,
-      StockQuantity: 100,
-      CategoryID: 1,
-    },
-    {
-      ProductID: 1,
-      ProductName: "Áo thun nam dài",
-      Description:
-        "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-      Price: 150000,
-      StockQuantity: 100,
-      CategoryID: 1,
-    },
-  ];
-  const [listProduct, setListProduct] = useState(listProductTemp);
+  const navigate = useNavigate();
+  const listProduct = useSelector((state) => state.admin).productList;
+  console.log(listProduct);
   const renderListProduct = () => {
     return listProduct.map((product, index) => {
       return (
         <tr key={index}>
-          <td>{product.ProductID}</td>
           <td>{product.ProductName}</td>
           <td>{product.Description}</td>
           <td>{product.Price}</td>
@@ -59,120 +33,59 @@ const ProductManagement = () => {
       );
     });
   };
+
+  const handleClick = (type) => {
+    switch (type) {
+      case "addProduct":
+        navigate("/admin/product/product-management/add");
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <div className="flex justify-center">
-      <div className="bg-gray-100 w-full h-screen">
+      <div className="bg-dark-electric-blue-2 w-full h-full">
         <div className=" mx-auto py-8">
-          <h1 className="text-3xl font-semibold text-center mb-8">
+          <h1 className="text-3xl font-semibold text-center mb-8 text-white">
             Quản lý Sản phẩm
           </h1>
-          <div className="flex justify-center items-center mb-8 flex-wrap">
-            <input
-              type="text"
-              id="name"
-              placeholder="Tên Sản phẩm"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <input
-              type="text"
-              id="price"
-              placeholder="Mô tả"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <input
-              type="text"
-              id="price"
-              placeholder="Giá"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <input
-              type="number"
-              id="price"
-              placeholder="Số lượng"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <div className="mr-4">
-              <select
-                id="category"
-                className="w-[150px] px-4 py-2 border-[1px] border-solid border-gray-300 rounded-[5px]"
-              >
-                <option value="" disabled hidden>
-                  Loại sản phẩm
-                </option>
-                <option value="electronics">Electronics</option>
-                <option value="clothing">Clothing</option>
-                <option value="books">Books</option>
-                <option value="toys">Toys</option>
-                {/* <!-- Thêm các lựa chọn khác nếu cần --> */}
-              </select>
-            </div>
+          <div className="flex p-[10px]">
             <button
               id="add-product"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              className="border-[1px] border-marigold border-solid px-4 py-2 bg-marigold text-white rounded-md font-bold hover:bg-deep-space-sparkle hover:text-marigold mr-4"
+              onClick={() => handleClick("addProduct")}
             >
               Thêm Sản phẩm
             </button>
-          </div>
-          <div className="flex justify-center items-center mb-8">
-            <input
-              type="text"
-              id="name"
-              placeholder="Tên Sản phẩm"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <input
-              type="text"
-              id="price"
-              placeholder="Mô tả"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <input
-              type="text"
-              id="price"
-              placeholder="Giá"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <input
-              type="number"
-              id="price"
-              placeholder="Số lượng"
-              className="px-4 py-2 border border-gray-300 rounded-[5px] mr-4"
-            />
-            <div className="mr-4">
-              <select
-                id="category"
-                className="w-[150px] px-4 py-2 border-[1px] border-solid border-gray-300 rounded-[5px]"
-              >
-                <option value=""></option>
-                <option value="electronics">Electronics</option>
-                <option value="clothing">Clothing</option>
-                <option value="books">Books</option>
-                <option value="toys">Toys</option>
-              </select>
-            </div>
             <button
               id="add-product"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md w-[148px]"
+              className="border-[1px] border-marigold border-solid px-4 py-2 bg-marigold text-white rounded-md font-bold hover:bg-deep-space-sparkle hover:text-marigold"
             >
-              Tìm kiếm
+              Xoá sản phẩm đã chọn
             </button>
           </div>
-
-          <div className="p-[10px]">
-            <table className="border-collapse w-full ">
-              <thead>
-                <tr>
-                  <th className="w-[30px]">Id</th>
-                  <th className="w-[300px]">Tên sản phẩm</th>
-                  <th>Mô tả</th>
-                  <th>Giá</th>
-                  <th>Số lượng tồn</th>
-                  <th>Loại sản phẩm</th>
-                  <th className="w-[100px]"></th>
-                </tr>
-              </thead>
-              <tbody>{renderListProduct()}</tbody>
-            </table>
+          <div className="p-[20px] bg-deep-space-sparkle text-white ">
+            <div className="max-h-[500px] overflow-y-scroll">
+              <table className="border-collapse w-full ">
+                <thead className="sticky top-[-1px]">
+                  <tr>
+                    <th className="w-[200px]">Tên sản phẩm</th>
+                    <th>Mô tả</th>
+                    <th>Giá</th>
+                    <th>Số lượng tồn</th>
+                    <th>Loại sản phẩm</th>
+                    <th className="w-[100px]"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renderListProduct()}
+                  {renderListProduct()}
+                  {renderListProduct()}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
