@@ -35,7 +35,12 @@ public class ProductService {
             return null;
         }
     }
-
+    public List<ProductResponse> searchProducts(String keyword) {
+        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(keyword);
+        return products.stream()
+                .map(this::convertToProductResponse)
+                .collect(Collectors.toList());
+    }
     private ProductResponse convertToProductResponse(Product product) {
         ProductResponse productResponse = new ProductResponse();
         productResponse.setProductId(product.getProductId());

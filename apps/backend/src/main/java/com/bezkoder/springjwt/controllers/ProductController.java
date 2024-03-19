@@ -30,8 +30,13 @@ public class ProductController {
     @Autowired
     private CategoryRepository categoryRepository;
     @GetMapping("/all")
-    public List<ProductResponse> getAllProducts() {
-        return productService.getAllProductsWithCategories();
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        List<ProductResponse> productResponses = productService.getAllProductsWithCategories();
+        if (!productResponses.isEmpty()) {
+            return new ResponseEntity<>(productResponses, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{productId}")
@@ -49,6 +54,16 @@ public class ProductController {
         List<CategoryResponse> categoryResponse = categoryService.getProductsByCategoryId(categoryId);
         if (!categoryResponse.isEmpty()) {
             return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam("keyword") String keyword) {
+        List<ProductResponse> productResponses = productService.searchProducts(keyword);
+        if (!productResponses.isEmpty()) {
+            return new ResponseEntity<>(productResponses, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
