@@ -1,0 +1,13 @@
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+td {
+  text-align: center;
+}
+td,
+th {
+  border: 1px solid black;
+}
+tr:hover {
+  background-color: #d6eeee;
+}
