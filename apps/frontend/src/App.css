@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.message-box {
+  z-index: 100;
+  width: auto;
+  top: -50px;
+  transition: all 1s ease-out;
+  -webkit-transition: all 1s ease-out;
+}
+.show {
+  top: 25px;
+}

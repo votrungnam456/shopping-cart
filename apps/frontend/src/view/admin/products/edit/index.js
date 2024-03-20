@@ -1,18 +1,20 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { isNumber, notification } from "../../../../core/common/function";
-import { useDispatch } from "react-redux";
-import { addProduct } from "../../../../core/store/adminSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct, editProduct } from "../../../../core/store/adminSlice";
 import Select from "react-select";
-const AddProduct = () => {
+const EditProduct = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const options = [
-    { value: 1, label: "Áo" },
-    { value: 2, label: "Đồ nam" },
-    { value: 3, label: "Đồ nữ" },
-    { value: 4, label: "Áo thun" },
-    { value: 5, label: "Áo tay dài" },
+    { value: "1", label: "Bánh" },
+    { value: "2", label: "Nước uống" },
+    { value: "3", label: "Đồ chiên" },
+    { value: "4", label: "Kem" },
+    { value: "5", label: "Thịt" },
   ];
   const colorSelectStyle = {
     control: (styles) => ({
@@ -37,7 +39,39 @@ const AddProduct = () => {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [category, setCategory] = useState([]);
-
+  const listProduct = useSelector((state) => state.admin).productList;
+  const temp = listProduct
+    .filter((product) => product.ProductID === id)[0]
+    .Category.map((item) => {
+      return {
+        value: item.categoryId,
+        label: item.categoryName,
+        item: item,
+      };
+    });
+  useEffect(() => {
+    const filter = listProduct.filter((product) => product.ProductID === id)[0];
+    if (filter) {
+      setName(filter.ProductName);
+      setDescription(filter.Description);
+      setPrice(filter.Price);
+      setQuantity(filter.StockQuantity);
+      setCategory(
+        filter.Category.map((item) => {
+          return {
+            value: item.categoryId,
+            label: item.categoryName,
+          };
+        })
+      );
+    } else {
+      notification({
+        type: "error",
+        message: "Không tìm thấy thông tin sản phẩm",
+        duration: 3000,
+      });
+    }
+  }, []);
   const onlyInputNumber = (ev) => {
     const dataInput = ev.target.value;
     if (isNumber(dataInput)) {
@@ -57,7 +91,7 @@ const AddProduct = () => {
       case "backProduct":
         navigate("/admin/product/product-management");
         break;
-      case "addProduct": {
+      case "editProduct": {
         if (checkValidate()) {
           const convertDataCategory = category.map((data) => {
             return {
@@ -66,13 +100,14 @@ const AddProduct = () => {
             };
           });
           const params = {
+            ProductID: id,
             ProductName: name,
             Description: description,
             Price: price,
             StockQuantity: quantity,
             Category: convertDataCategory,
           };
-          dispatch(addProduct(params));
+          dispatch(editProduct(params));
           navigate("/admin/product/product-management");
         } else {
           notification({
@@ -92,7 +127,7 @@ const AddProduct = () => {
       <div className="bg-dark-electric-blue-2 w-full h-full">
         <div className=" mx-auto py-8">
           <h1 className="text-3xl font-semibold text-center mb-8 text-white">
-            Thêm sản phẩm
+            Sửa sản phẩm
           </h1>
           <div className="flex p-[10px]">
             <button
@@ -110,14 +145,14 @@ const AddProduct = () => {
                   <p className="mb-[10px]">Tên Sản Phẩm *</p>
                   <input
                     className="bg-dark-electric-blue h-[50px] w-full p-[18px]"
-                    value={name}
+                    value={name || ""}
                     onChange={(e) => setName(e.target.value)}
                   ></input>
                 </div>
                 <div>
                   <p className="mb-[10px]">Mô Tả</p>
                   <textarea
-                    value={description}
+                    value={description || ""}
                     onChange={(e) => setDescription(e.target.value)}
                     className="bg-dark-electric-blue h-[120x] w-full p-[18px]"
                   ></textarea>
@@ -125,7 +160,7 @@ const AddProduct = () => {
                 <div className="mb-[5px]">
                   <p className="mb-[10px]">Giá *</p>
                   <input
-                    value={price}
+                    value={price || ""}
                     onChange={(e) => onlyInputNumber(e)}
                     className="bg-dark-electric-blue h-[50px] w-full p-[18px]"
                   ></input>
@@ -133,7 +168,7 @@ const AddProduct = () => {
                 <div className="mb-[5px]">
                   <p className="mb-[10px]">Số lượng *</p>
                   <input
-                    value={quantity}
+                    value={quantity || 0}
                     onChange={(e) => setQuantity(e.target.value)}
                     type="number"
                     className="bg-dark-electric-blue h-[50px] w-full p-[18px]"
@@ -141,18 +176,6 @@ const AddProduct = () => {
                 </div>
                 <div className="mb-[30px]">
                   <p className="mb-[10px]">Loại Sản Phẩm *</p>
-                  {/* <select
-                    id="category"
-                    className="bg-dark-electric-blue w-full px-4 py-2 "
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                  >
-                    <option value="">Loại sản phẩm</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="books">Books</option>
-                    <option value="toys">Toys</option>
-                  </select> */}
                   <Select
                     options={options}
                     styles={colorSelectStyle}
@@ -167,9 +190,9 @@ const AddProduct = () => {
                   <button
                     id="add-product"
                     className="border-[1px] border-marigold border-solid px-4 py-2 bg-marigold text-white font-bold hover:bg-deep-space-sparkle hover:text-marigold mr-4 w-full"
-                    onClick={() => handleClick("addProduct")}
+                    onClick={() => handleClick("editProduct", id)}
                   >
-                    Thêm sản phẩm
+                    Sửa sản phẩm
                   </button>
                 </div>
               </div>
@@ -181,4 +204,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;

@@ -51,15 +51,15 @@ const notification = async ({
   const rndInt = Math.floor(Math.random() * 600) + 1;
   const typeClass =
     type === "success"
-      ? "border-royal-green text-royal-green"
-      : "border-royal-red text-royal-red";
+      ? "border-royal-green !text-royal-green"
+      : "border-royal-red !text-royal-red";
   const renderCompont = `
-  <div class="message-box message-dialog right-25px border-2 bg-white px-20px py-5px rounded fixed text-white align-middle ${typeClass} ${className} notification-${rndInt}">
+  <div class="message-box message-dialog right-[25px] border-2 bg-white px-[20px] py-[5px] rounded fixed text-white align-middle ${typeClass} ${className} notification-${rndInt}">
     ${message}
   </div>
   `;
   const nodeRender = document.createElement("div");
-  document.querySelector("#app")?.appendChild(nodeRender);
+  document.querySelector("#root")?.appendChild(nodeRender);
   nodeRender.innerHTML = renderCompont;
   const elementItem = document.getElementsByClassName(
     `notification-${rndInt}`

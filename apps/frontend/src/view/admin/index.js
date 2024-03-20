@@ -23,9 +23,6 @@ const AdminMaster = () => {
     });
     return result;
   };
-  useEffect(() => {
-    console.log("a");
-  }, []);
   return (
     <div>
       <Routes>
@@ -39,15 +36,10 @@ const AdminMaster = () => {
           <Route path="/login" exact={true} element={<Login></Login>}></Route>
         </Route>
       </Routes>
-      <div
-        v-title="'まなびボックス'"
-        className="flex self-stretch h-screen overflow-y-auto"
-      >
+      <div className="flex self-stretch h-screen overflow-y-auto">
         <SlideBarAdmin />
-        <div className="w-full w-content-admin pt-55px overflow-y-auto pb-30px">
-          {/* <headerBar class="header-scroll fixed top-0" is-c-m-s /> */}
+        <div className="w-full w-content-admin pt-55px overflow-y-auto pb-[5px] bg-dark-electric-blue-2 ">
           <div className="mh-content-admin py-50px px-30px relative whitespace-pre-wrap">
-            {/* <div v-if="isLoading" v-loading="true" class="loading-screen"></div> */}
             <Routes>{setRoutes()}</Routes>
           </div>
         </div>
