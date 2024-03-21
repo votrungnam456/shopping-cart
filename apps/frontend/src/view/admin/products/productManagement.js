@@ -1,12 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./productManagement.css";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { formatMoney } from "../../../core/common/function";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  formatMoney,
+  notification,
+  sessionStorageHandle,
+} from "../../../core/common/function";
 import Modal from "../../../components/common/modal";
+import {
+  deleteManyProduct,
+  deleteProduct,
+} from "../../../core/store/adminSlice";
 const ProductManagement = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const listProduct = useSelector((state) => state.admin).productList;
+  const [listCheckbox, setListCheckbox] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState({
+    headerTitle: "",
+    bodyTitle: "",
+    buttonAction: "",
+    buttonCancel: "",
+    typeConfirm: "",
+  });
+  useEffect(() => {
+    sessionStorageHandle("remove", "productId");
+  }, []);
   const maxLengthCategory = () => {
     let temp = 0;
     listProduct.forEach((product) => {
@@ -23,10 +44,97 @@ const ProductManagement = () => {
     }
     return temp;
   };
+  const handleCheckboxChange = (ev, value) => {
+    const selectedIndex = listCheckbox.indexOf(value);
+    if (selectedIndex === -1) {
+      setListCheckbox([...listCheckbox, value]);
+    } else {
+      setListCheckbox(listCheckbox.filter((item) => item !== value));
+    }
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    sessionStorageHandle("remove", "productId");
+  };
+  const handleConfirm = () => {
+    switch (modalText.typeConfirm) {
+      case "DeleteProduct":
+        handleClick("deleteProduct");
+        break;
+      case "DeleteManyProduct":
+        handleClick("deleteManyProduct");
+        break;
+      default:
+        break;
+    }
+
+    setIsModalOpen(false);
+  };
+  const handleClick = async (type, data) => {
+    switch (type) {
+      case "addProduct":
+        navigate("/admin/product/product-management/add");
+        break;
+      case "editProduct":
+        navigate(`/admin/product/product-management/edit/${data}`);
+        break;
+      case "deleteProductConfirm":
+        setModalText({
+          headerTitle: "Xoá sản phẩm",
+          bodyTitle: "Bạn muốn xoá sản phẩm này",
+          buttonAction: "Xoá",
+          buttonCancel: "Huỷ",
+          typeConfirm: "DeleteProduct",
+        });
+        sessionStorageHandle("set", "productId", data);
+        setIsModalOpen(true);
+        break;
+      case "deleteProduct": {
+        const productId = sessionStorageHandle("get", "productId");
+        await dispatch(deleteProduct(productId));
+        break;
+      }
+
+      case "deleteManyProductConfirm":
+        if (listCheckbox.length === 0) {
+          notification({
+            type: "error",
+            message: "Vui lòng chọn sản phẩm muốn xoá",
+            duration: 3000,
+          });
+        } else {
+          setModalText({
+            headerTitle: "Xoá sản phẩm",
+            bodyTitle: "Bạn muốn xoá các sản phẩm này",
+            buttonAction: "Xoá",
+            buttonCancel: "Huỷ",
+            typeConfirm: "DeleteManyProduct",
+          });
+          setIsModalOpen(true);
+        }
+        break;
+      case "deleteManyProduct":
+        await dispatch(deleteManyProduct(listCheckbox));
+        setListCheckbox([]);
+        break;
+      default:
+        break;
+    }
+  };
+
   const renderListProduct = () => {
     return listProduct.map((product, index) => {
       return (
         <tr key={index}>
+          <td>
+            <input
+              className="checkbox"
+              type="checkbox"
+              onChange={(ev) => handleCheckboxChange(ev, product.ProductID)}
+              checked={listCheckbox.includes(product.ProductID)}
+              value={product.ProductID}
+            />
+          </td>
           <td>{product.ProductName}</td>
           <td>{formatMoney(product.Price)}</td>
           <td>{product.StockQuantity}</td>
@@ -43,37 +151,15 @@ const ProductManagement = () => {
                 alt="icon-delete"
                 src="/icon/iconDelete.png"
                 className="w-[30px] cursor-pointer"
-                onClick={() => handleClick("deleteProduct", product.ProductID)}
+                onClick={() =>
+                  handleClick("deleteProductConfirm", product.ProductID)
+                }
               ></img>
             </div>
           </td>
         </tr>
       );
     });
-  };
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-  const handleConfirmDelete = () => {
-    // onDelete(product.id);
-    setIsModalOpen(false);
-  };
-  const handleClick = (type, data) => {
-    switch (type) {
-      case "addProduct":
-        navigate("/admin/product/product-management/add");
-        break;
-      case "editProduct":
-        navigate(`/admin/product/product-management/edit/${data}`);
-        break;
-
-      case "deleteProduct":
-        setIsModalOpen(true);
-        break;
-      default:
-        break;
-    }
   };
   return (
     <>
@@ -94,6 +180,7 @@ const ProductManagement = () => {
               <button
                 id="add-product"
                 className="border-[1px] border-marigold border-solid px-4 py-2 bg-marigold text-white rounded-md font-bold hover:bg-deep-space-sparkle hover:text-marigold"
+                onClick={() => handleClick("deleteManyProductConfirm")}
               >
                 Xoá sản phẩm đã chọn
               </button>
@@ -103,6 +190,7 @@ const ProductManagement = () => {
                 <table className="border-collapse w-full ">
                   <thead className="sticky top-[-1px]">
                     <tr>
+                      <th className="w-[50px]"></th>
                       <th className="w-[200px]">Tên sản phẩm</th>
                       <th className="w-[150px]">Giá</th>
                       <th className="w-[130px]">Số lượng tồn</th>
@@ -120,7 +208,11 @@ const ProductManagement = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        onConfirm={handleConfirmDelete}
+        onConfirm={handleConfirm}
+        headerTitle={modalText.headerTitle}
+        bodyTitle={modalText.bodyTitle}
+        buttonAction={modalText.buttonAction}
+        buttonCancel={modalText.buttonCancel}
       />
     </>
   );

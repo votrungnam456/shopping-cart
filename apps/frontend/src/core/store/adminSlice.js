@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { notification } from "../common/function";
+import { notification, sessionStorageHandle } from "../common/function";
 
 export const adminSlice = createSlice({
   name: "auth",
@@ -46,7 +46,7 @@ export const adminSlice = createSlice({
         ],
       },
       {
-        ProductID: 3,
+        ProductID: "3",
         ProductName: "Coca cola",
         Description:
           "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
@@ -89,12 +89,35 @@ export const adminSlice = createSlice({
       }
     },
     deleteProduct: (state, action) => {
-      // a
+      const index = state.productList.findIndex(
+        (product) => product.ProductID === action.payload
+      );
+      if (index !== -1) {
+        state.productList.splice(index, 1);
+        notification({
+          message: "Xoá sản phẩm thành công",
+          duration: 3000,
+        });
+        sessionStorageHandle("remove", "productId");
+      } else {
+        notification({
+          type: "error",
+          message: "Xoá sản phẩm thất bại",
+          duration: 3000,
+        });
+      }
+    },
+    deleteManyProduct: (state, action) => {
+      const filter = state.productList.filter(
+        (item) => !action.payload.includes(item.ProductID)
+      );
+      state.productList = filter;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addProduct, editProduct } = adminSlice.actions;
+export const { addProduct, editProduct, deleteProduct, deleteManyProduct } =
+  adminSlice.actions;
 
 export default adminSlice.reducer;

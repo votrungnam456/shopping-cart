@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { isNumber, notification } from "../../../../core/common/function";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, editProduct } from "../../../../core/store/adminSlice";
+import { editProduct } from "../../../../core/store/adminSlice";
 import Select from "react-select";
 const EditProduct = () => {
   const { id } = useParams();
@@ -40,15 +40,6 @@ const EditProduct = () => {
   const [quantity, setQuantity] = useState(0);
   const [category, setCategory] = useState([]);
   const listProduct = useSelector((state) => state.admin).productList;
-  const temp = listProduct
-    .filter((product) => product.ProductID === id)[0]
-    .Category.map((item) => {
-      return {
-        value: item.categoryId,
-        label: item.categoryName,
-        item: item,
-      };
-    });
   useEffect(() => {
     const filter = listProduct.filter((product) => product.ProductID === id)[0];
     if (filter) {

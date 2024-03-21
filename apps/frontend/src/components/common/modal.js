@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 
-const Modal = ({ isOpen, onClose, onConfirm }) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  headerTitle,
+  bodyTitle,
+  buttonAction,
+  buttonCancel,
+}) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleConfirm = () => {
@@ -48,11 +56,13 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
                       className="text-lg leading-6 font-medium text-gray-900"
                       id="modal-title"
                     >
-                      Xoá sản phẩm
+                      {headerTitle}
+                      {/* Xoá sản phẩm  */}
                     </h3>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Bạn có chắc sẽ xoá sản phẩm này ?
+                        {bodyTitle}
+                        {/* Bạn muốn xoá sản phẩm này ? */}
                       </p>
                     </div>
                   </div>
@@ -63,16 +73,17 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
                   onClick={handleConfirm}
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  disabled={isDeleting}
                 >
-                  Xoá
+                  {buttonAction}
+                  {/* Xoá */}
                 </button>
                 <button
                   onClick={onClose}
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Huỷ
+                  {buttonCancel}
+                  {/* Huỷ */}
                 </button>
               </div>
             </div>
