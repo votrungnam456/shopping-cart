@@ -1,25 +1,22 @@
-tr:nth-child(even) {
+#table-product-management > tr:nth-child(even) {
   background-color: #dddddd;
 }
 
 tr:nth-child(odd) {
   background-color: #fff;
 }
-td {
-  /* text-align: center; */
-}
-td,
-th {
+#table-product-management > #table-product-management > td,
+#table-product-management > th {
   border: 1px solid black;
   padding: 15px;
 }
-tr:hover {
+#table-product-management > tr:hover {
   background-color: #d6eeee;
 }
-th {
+#table-product-management > th {
   background-color: var(--color-dark-electric-blue-2);
 }
-td {
+#table-product-management > td {
   background-color: #4a6176;
 }
 
@@ -36,7 +33,7 @@ td {
 ::-webkit-scrollbar-thumb:hover {
   background: #8ab5d6;
 }
-input[type="checkbox"] {
+#table-product-management > input[type="checkbox"] {
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
@@ -50,11 +47,11 @@ input[type="checkbox"] {
   height: 24px;
   transition: all 0.1s linear;
 }
-input[type="checkbox"]:checked {
+#table-product-management > input[type="checkbox"]:checked {
   background: url("../../../../public/icon/iconCheckMark.png") #394e64 center
     no-repeat;
 }
-input[type="checkbox"]:focus {
+#table-product-management > input[type="checkbox"]:focus {
   outline: 0 none;
   box-shadow: none;
 }

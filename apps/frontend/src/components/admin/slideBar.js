@@ -1,209 +1,122 @@
-import { useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import MuiDrawer from "@mui/material/Drawer";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Box } from "@mui/material";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import KeyIcon from "@mui/icons-material/Key";
+import BookIcon from "@mui/icons-material/Book";
+import SellIcon from "@mui/icons-material/Sell";
+import CommentIcon from "@mui/icons-material/Comment";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import { useNavigate } from "react-router-dom";
 
-const SlideBarAdmin = () => {
-  const slideBarTemp = [
-    {
-      name: "Home",
-      label: "Home",
-      active: false,
-      activeSub: false,
-      router: "Home",
-      // icon: "home",
-      path: "/",
-      // activeMenu: ["Home"],
-      subMenu: null,
-      // role: [1, 2],
-    },
+const drawerWidth = 240;
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  "& .MuiDrawer-paper": {
+    position: "relative",
+    whiteSpace: "nowrap",
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    boxSizing: "border-box",
+    ...(!open && {
+      overflowX: "hidden",
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      width: theme.spacing(7),
+      [theme.breakpoints.up("sm")]: {
+        width: theme.spacing(9),
+      },
+    }),
+    height: "100vh",
+  },
+}));
+
+export default function SlideBar({ openDrawer, toggleDrawer }) {
+  const navigate = useNavigate();
+  const toggle = () => {
+    toggleDrawer();
+  };
+
+  const slideBarList = [
     {
       name: "ProductManagement",
-      label: "Quản lý sản phẩm",
-      active: false,
-      activeSub: false,
-      router: null,
-      // icon: "settings",
-      path: "",
-      // role: [1, 2],
-      subMenu: [
-        {
-          name: "Product",
-          label: "Sản phẩm",
-          router: "productManagement",
-          path: "/product/product-management",
-          // activeMenu: ["BookCreate"],
-          active: false,
-          // role: [1, 2],
-        },
-        {
-          name: "ProductCombo",
-          label: "Combo sản phẩm",
-          router: "ProductCombo",
-          path: "/product/product-combo",
-          // activeMenu: ["BookEdit"],
-          active: false,
-          // role: [1, 2],
-        },
-        {
-          name: "ProductType",
-          label: "Loại sản phẩm",
-          router: "BookExport",
-          path: "/product/product-type",
-          // activeMenu: ["BookExport"],
-          active: false,
-          // role: [1, 2],
-        },
-      ],
+      path: "/product/product-management",
+      label: "Sản phẩm",
+      icon: <ProductionQuantityLimitsIcon></ProductionQuantityLimitsIcon>,
     },
     {
       name: "ProductComment",
-      label: "Quản lý bình luận đánh giá",
-      active: false,
-      activeSub: false,
-      router: "productComment",
-      // icon: "home",
       path: "/product/product-comment",
-      // activeMenu: ["Home"],
-      subMenu: null,
-      // role: [1, 2],
+      label: "Bình luận đánh giá",
+      icon: <CommentIcon></CommentIcon>,
     },
     {
       name: "OrderManagement",
-      label: "Quản lý đơn hàng",
-      active: false,
-      activeSub: false,
-      router: "orderManagement",
-      // icon: "home",
       path: "/order-management",
-      // activeMenu: ["Home"],
-      subMenu: null,
-      // role: [1, 2],
+      label: "Đơn hàng",
+      icon: <SellIcon></SellIcon>,
     },
     {
       name: "Voucher",
-      label: "Tạo voucher",
-      active: false,
-      activeSub: false,
-      router: "voucher",
-      // icon: "home",
       path: "/voucher",
-      // activeMenu: ["Home"],
-      subMenu: null,
-      // role: [1, 2],
+      label: "Tạo voucher",
+      icon: <BookIcon></BookIcon>,
     },
     {
       name: "AccessManagement",
-      label: "Quản lý truy cập hệ thống",
-      active: false,
-      activeSub: false,
-      router: "AccessManagement",
-      // icon: "home",
       path: "/access-management",
-      // activeMenu: ["Home"],
-      subMenu: null,
-      // role: [1, 2],
-    },
-    {
-      name: "Logout",
-      label: "Đăng xuất",
-      active: false,
-      activeSub: false,
-      router: "Logout",
-      // icon: "logout",
-      path: "/logout",
-      // role: [1, 2],
+      label: "Truy cập hệ thống",
+      icon: <KeyIcon></KeyIcon>,
     },
   ];
-  const [slideBar, setSlideBar] = useState(slideBarTemp);
-  const navigate = useNavigate();
-  // index: number
-  // name: string
-  /**
-   * @param {number} index
-   * @param {string} name page name
-   * @return {void}
-   */
-  const clickLink = async (path) => {
-    if (path === "/logout") {
-      // logout action
-    } else {
-      navigate(`/admin${path}`);
-    }
-  };
-  /**
-   * @param {string} name sub active
-   * @return {void}
-   */
-  const onToggleSubMenu = (name) => {
-    const temp = [...slideBar];
-    temp.forEach((item) => {
-      if (item?.name === name) {
-        item.activeSub = !item.activeSub;
-      }
-    });
-    setSlideBar(() => temp);
-  };
-
-  /**
-   * render sildebar
-   * @return {void}
-   */
   const renderSlideBar = () => {
-    const result = slideBar?.map((item, index) => {
+    return slideBarList.map((item, index) => {
       return (
-        <div
+        <ListItemButton
+          onClick={() => {
+            navigate(`/admin${item.path}`);
+          }}
           key={index}
-          className={`py-[16px] px-0 flex items-start justify-center flex-col cursor-pointer text-white ${
-            item.active ? "bg-dark-electric-blue text-orange-500" : ""
-          } ${
-            !item.activeSub
-              ? "hover:bg-dark-electric-blue hover:text-orange-500"
-              : ""
-          }`}
-          onClick={!item?.subMenu ? () => clickLink(item.path) : () => {}}
         >
-          <li
-            className="flex items-center justify-start px-[15px] text-[14px] font-bold w-full"
-            onClick={
-              item?.subMenu ? () => onToggleSubMenu(item.name) : () => {}
-            }
-          >
-            {item.label}
-          </li>
-          {item?.subMenu && (item.active || item.activeSub) ? (
-            <ul className="text-[12px] mt-[8px] w-full">
-              {item?.subMenu?.map((itemSub, indexSub) => {
-                return (
-                  <div key={indexSub}>
-                    <li
-                      className={`pl-[45px] py-[5px] text-left font-bold hover:bg-dark-electric-blue hover:text-orange-500 cursor-pointer ${
-                        itemSub.active
-                          ? "bg-dark-electric-blue text-orange-500"
-                          : ""
-                      }`}
-                      onClick={() => clickLink(itemSub.path)}
-                    >
-                      {itemSub?.label}
-                    </li>
-                  </div>
-                );
-              })}
-            </ul>
-          ) : (
-            ""
-          )}
-        </div>
+          <ListItemIcon>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.label} />
+        </ListItemButton>
       );
     });
-    return result;
   };
   return (
-    <div className="bg-dark-electric-blue min-w-[230px] h-full pt-[30px] flex flex-col justify-between overflow-y-auto">
-      <div>
-        <p className="font-bold text-[20px] text-white text-center">Admin</p>
-        <ul className="pt-[20px]">{renderSlideBar()}</ul>
-      </div>
-    </div>
+    <Box>
+      <Drawer variant="permanent" open={openDrawer}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            px: [1],
+          }}
+        >
+          <IconButton onClick={toggle}>
+            {/* <h1>Admin</h1> */}
+            <ChevronLeftIcon />
+          </IconButton>
+        </Toolbar>
+        <Divider />
+        <List component="nav">{renderSlideBar()}</List>
+      </Drawer>
+    </Box>
   );
-};
-
-export default SlideBarAdmin;
+}

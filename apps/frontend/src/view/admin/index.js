@@ -4,9 +4,12 @@ import routesAdmin from "../../core/routes/routeAdmin";
 import Login from "../auth/login";
 import { useEffect, useState } from "react";
 import IsLoginAdmin from "../../components/auth/isLoginAdmin";
+import { Box, Toolbar } from "@mui/material";
+import HeaderAdmin from "../../components/admin/header";
 
 const AdminMaster = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [open, setOpen] = useState(true);
   const setRoutes = () => {
     const result = routesAdmin.map((route, index) => {
       const { path, exact, main } = route;
@@ -23,6 +26,10 @@ const AdminMaster = () => {
     });
     return result;
   };
+
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
   return (
     <div>
       <Routes>
@@ -36,14 +43,25 @@ const AdminMaster = () => {
           <Route path="/login" exact={true} element={<Login></Login>}></Route>
         </Route>
       </Routes>
-      <div className="flex self-stretch h-screen overflow-y-auto">
-        <SlideBarAdmin />
-        <div className="w-full w-content-admin pt-55px overflow-y-auto pb-[5px] bg-dark-electric-blue-2 ">
-          <div className="mh-content-admin py-50px px-30px relative whitespace-pre-wrap">
-            <Routes>{setRoutes()}</Routes>
-          </div>
-        </div>
-      </div>
+      <Box sx={{ display: "flex" }}>
+        <HeaderAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
+        <SlideBarAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
+          }}
+        >
+          <Toolbar />
+          <Routes>{setRoutes()}</Routes>
+        </Box>
+      </Box>
     </div>
   );
 };
