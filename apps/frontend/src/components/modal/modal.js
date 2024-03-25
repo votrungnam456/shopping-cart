@@ -57,13 +57,9 @@ const Modal = ({
                       id="modal-title"
                     >
                       {headerTitle}
-                      {/* Xoá sản phẩm  */}
                     </h3>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        {bodyTitle}
-                        {/* Bạn muốn xoá sản phẩm này ? */}
-                      </p>
+                      <p className="text-sm text-gray-500">{bodyTitle}</p>
                     </div>
                   </div>
                 </div>

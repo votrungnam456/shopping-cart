@@ -1,5 +1,5 @@
 .message-box {
-  z-index: 100;
+  z-index: 1300;
   width: auto;
   top: -50px;
   transition: all 1s ease-out;

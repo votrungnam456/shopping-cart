@@ -85,10 +85,12 @@ const isNumber = (data) => {
   return !isNaN(data);
 };
 const formatMoney = (value) => {
-  return value.toLocaleString("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  });
+  return isNaN(parseInt(value))
+    ? 0
+    : parseInt(value).toLocaleString("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      });
 };
 const isObjectEmpty = (obj) => {
   return Object.keys(obj).length === 0;

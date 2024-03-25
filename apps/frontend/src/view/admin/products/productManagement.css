@@ -21,16 +21,19 @@ tr:nth-child(odd) {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #394f62;
+  /* background: #394f62; */
+  background: #fff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #6d8da6;
+  /* background: #6d8da6; */
+  background: #fff;
 }
 ::-webkit-scrollbar-thumb:hover {
+  /* background: #8ab5d6; */
   background: #8ab5d6;
 }
 #table-product-management > input[type="checkbox"] {
@@ -54,4 +57,7 @@ tr:nth-child(odd) {
 #table-product-management > input[type="checkbox"]:focus {
   outline: 0 none;
   box-shadow: none;
+}
+.MuiTableCell-root {
+  word-break: break-all;
 }
