@@ -1,5 +1,6 @@
 package com.bezkoder.springjwt.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -27,11 +28,26 @@ public class Product {
     @Column(name = "stockquantity")
     private Integer stockQuantity;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "products_category",
-            joinColumns = @JoinColumn(name = "product_productid"),
-            inverseJoinColumns = @JoinColumn(name = "category_categoryid"))
-    private Set<Category> categories = new HashSet<>();
+    // Thêm trường tham chiếu đến Category
+    @ManyToOne
+    @JoinColumn(name = "categoryid")
+    @JsonIgnore
+    private Category category;
+
+    // constructors, getters, setters
+
+    public Product(Integer productId, String productName, String description, Double price, Integer stockQuantity, Category category) {
+        this.productId = productId;
+        this.productName = productName;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
+    }
+
+    public Product() {
+    }
+
     public Integer getProductId() {
         return productId;
     }
@@ -72,23 +88,11 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 
-    public Set<Category> getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
-    }
-
-    public Product(Integer productId, String productName, String description, Double price, Integer stockQuantity, Set<Category> categories) {
-        this.productId = productId;
-        this.productName = productName;
-        this.description = description;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
-        this.categories = categories;
-    }
-
-    public Product() {
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

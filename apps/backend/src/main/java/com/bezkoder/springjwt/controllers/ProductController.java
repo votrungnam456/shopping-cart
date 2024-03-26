@@ -2,6 +2,7 @@ package com.bezkoder.springjwt.controllers;
 
 import com.bezkoder.springjwt.models.Product;
 
+import com.bezkoder.springjwt.payload.request.ProductRequest;
 import com.bezkoder.springjwt.payload.response.CategoryResponse;
 import com.bezkoder.springjwt.payload.response.ProductResponse;
 import com.bezkoder.springjwt.repository.CategoryRepository;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,14 +33,15 @@ public class ProductController {
     @Autowired
     private CategoryRepository categoryRepository;
     @GetMapping("/all")
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAllProducts() {
         List<ProductResponse> productResponses = productService.getAllProductsWithCategories();
-        if (!productResponses.isEmpty()) {
-            return new ResponseEntity<>(productResponses, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (productResponses.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No products found");
         }
+        return productResponses;
     }
+
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Integer productId) {
@@ -66,6 +70,35 @@ public class ProductController {
             return new ResponseEntity<>(productResponses, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/")
+    public Product addProduct(@RequestBody ProductRequest productRequest) {
+        return productService.saveProduct(productRequest);
+    }
+
+    @PutMapping("/{productId}")
+    public ResponseEntity<Product> updateProduct(@PathVariable("productId") Integer productId, @RequestBody ProductRequest productRequest) {
+        Product updatedProduct = productService.updateProduct(productId, productRequest);
+        if (updatedProduct == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<String> deleteProducts(@RequestBody Map<String, List<Integer>> requestBody) {
+        List<Integer> productIds = requestBody.get("productIds");
+        if (productIds == null || productIds.isEmpty()) {
+            return new ResponseEntity<>("No productIds provided", HttpStatus.BAD_REQUEST);
+        }
+
+        boolean deleted = productService.deleteProducts(productIds);
+        if (deleted) {
+            return new ResponseEntity<>("Products have been deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Some products not found", HttpStatus.NOT_FOUND);
         }
     }
 }

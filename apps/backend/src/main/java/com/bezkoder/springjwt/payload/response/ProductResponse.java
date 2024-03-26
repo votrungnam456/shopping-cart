@@ -50,19 +50,19 @@ public class ProductResponse {
         this.stockQuantity = stockQuantity;
     }
 
-    public Set<Category> getCategories() {
+    public Category getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(Category categories) {
         this.categories = categories;
     }
 
     private double price;
     private int stockQuantity;
-    private Set<Category> categories;
+    private Category categories;
 
-    public ProductResponse(Integer productId, String productName, String description, double price, int stockQuantity, Set<Category> categories) {
+    public ProductResponse(Integer productId, String productName, String description, double price, int stockQuantity, Category categories) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;

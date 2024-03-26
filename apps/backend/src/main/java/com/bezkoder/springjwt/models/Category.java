@@ -1,8 +1,11 @@
 package com.bezkoder.springjwt.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -17,15 +20,19 @@ public class Category {
     @Column(name = "categoryname")
     private String categoryName;
 
-    // Constructors, getters, and setters
+
+    // constructors, getters, setters
+
 
     public Category(Integer categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
+
     public Category() {
-        // Default constructor
+
     }
+
     public Integer getCategoryId() {
         return categoryId;
     }
@@ -41,4 +48,6 @@ public class Category {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
 }
+
