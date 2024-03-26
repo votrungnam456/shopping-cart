@@ -11,6 +11,7 @@ import {
   editProduct,
 } from "../../core/store/adminSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { MenuItem, Select as MuiSelect } from "@mui/material";
 import Select from "react-select";
 
 const ModalAddEditProduct = ({
@@ -29,6 +30,9 @@ const ModalAddEditProduct = ({
   const [quantity, setQuantity] = useState(0);
   const [category, setCategory] = useState([]);
   const [options, setOptions] = useState([]);
+  const [productList, setproductList] = useState([{}]);
+  const [numberProductList, setnumberProductList] = useState(1);
+  const [percent, setpercent] = useState("");
   const storeAdmin = useSelector((state) => state.admin);
   const clearData = () => {
     setName("");
@@ -219,13 +223,33 @@ const ModalAddEditProduct = ({
     }));
     setOptions(temp);
   }, []);
-  const onlyInputNumber = (ev, type) => {
+  const onlyInputNumber = (ev, type, anotherData) => {
     const dataInput = ev.target.value;
     if (isNumber(dataInput)) {
       if (type === "price") {
         setPrice(dataInput);
       } else if (type === "quantity") {
         setQuantity(isNaN(parseInt(dataInput)) ? 0 : parseInt(dataInput));
+      } else if (type === "percent") {
+        if (!isNaN(parseInt(dataInput))) {
+          if (parseInt(dataInput) > 100) {
+            setpercent("100");
+            return;
+          } else if (parseInt(dataInput) < 0) {
+            setpercent("0");
+            return;
+          } else {
+            setpercent(dataInput);
+          }
+        } else {
+          setpercent("0");
+        }
+      } else if (type === "productQuantity") {
+        // anotherData is index of productList
+        // const temp = isNaN(parseInt(dataInput)) ? 0 : parseInt(dataInput);
+        // const tempList = [...productList];
+        // tempList[anotherData].quantity = temp;
+        // setQuantity(isNaN(parseInt(dataInput)) ? 0 : parseInt(dataInput));
       }
     }
   };
@@ -237,7 +261,65 @@ const ModalAddEditProduct = ({
       category.length === 0
     );
   };
+  const handleChange = (event, index) => {
+    console.log(event.target.value);
+    console.log("index: " + index);
+    const temp = [...productList];
+    temp[index].productId = event.target.value;
+    setproductList(temp);
+  };
+  useEffect(() => {
+    console.log(productList);
+  }, [productList]);
+  const renderNumberProductList = () => {
+    const result = [];
+    for (let i = 0; i < numberProductList; i++) {
+      result.push(
+        <div key={i}>
+          <div className="flex">
+            <div className="mb-[5px] w-1/2">
+              <p className="mb-[10px]">
+                Sản phẩm <span className="text-red">*</span>
+              </p>
+              <MuiSelect
+                className="w-[249px] h-[50px] border-dark-electric-blue border-[1px] border-solid"
+                value={productList[i]?.productId ?? ""}
+                onChange={(ev) => handleChange(ev, i)}
+              >
+                {storeAdmin.productList.map((item, index) => {
+                  return (
+                    <MenuItem key={index} value={item.ProductID}>
+                      {item.ProductName}
+                    </MenuItem>
+                  );
+                })}
+              </MuiSelect>
+            </div>
 
+            <div className="mb-[5px] ml-[5px]  w-1/2">
+              <p className="mb-[10px]">
+                Số lượng <span className="text-red">*</span>
+              </p>
+              <input
+                value={productList[i]?.quantity ?? 0}
+                onChange={(e) => onlyInputNumber(e, "productQuantity")}
+                className="border-dark-electric-blue border-[1px] border-solid h-[50px] w-full p-[18px]"
+              ></input>
+              {/* <p className="mb-[10px]">
+                Phần trăm giảm <span className="text-red">*</span>
+              </p>
+              <input
+                value={percent}
+                onChange={(e) => onlyInputNumber(e, "percent")}
+                className="border-dark-electric-blue border-[1px] border-solid h-[50px] w-full p-[18px]"
+              ></input> */}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return result;
+  };
   const renderUI = () => {
     if ([1, 2].includes(typeAction)) {
       return (
@@ -349,6 +431,77 @@ const ModalAddEditProduct = ({
           </div>
         </div>
       );
+    } else if ([5, 6].includes(typeAction)) {
+      return (
+        <div className="flex justify-center">
+          <div className="w-full h-full">
+            <div className=" mx-auto">
+              <h1 className="text-3xl font-semibold text-center my-[10px]">
+                {typeAction === 1 ? "Thêm combo" : "Sửa thông tin combo"}
+              </h1>
+              <div className="flex justify-center items-center">
+                <div className="p-[20px] w-[600px] m-h-[550px] overflow-x-scroll">
+                  <div className="">
+                    <div className="mb-[5px]">
+                      <p className="mb-[10px]">
+                        Tên Combo <span className="text-red">*</span>
+                      </p>
+                      <input
+                        className="border-dark-electric-blue border-[1px] border-solid h-[50px] w-full p-[18px] focus:border-red focus:border-[1px] focus:border-solid"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      ></input>
+                    </div>
+                    <div className="flex">
+                      <div className="mb-[5px] w-1/2">
+                        <p className="mb-[10px]">
+                          Giá <span className="text-red">*</span>
+                        </p>
+                        <input
+                          value={price}
+                          onChange={(e) => onlyInputNumber(e, "price")}
+                          className="border-dark-electric-blue border-[1px] border-solid h-[50px] w-full p-[18px]"
+                        ></input>
+                      </div>
+
+                      <div className="mb-[5px] ml-[5px]  w-1/2">
+                        <p className="mb-[10px]">
+                          Phần trăm giảm <span className="text-red">*</span>
+                        </p>
+                        <input
+                          value={percent}
+                          onChange={(e) => onlyInputNumber(e, "percent")}
+                          className="border-dark-electric-blue border-[1px] border-solid h-[50px] w-full p-[18px]"
+                        ></input>
+                      </div>
+                    </div>
+                    <div>{renderNumberProductList()}</div>
+                    <div className="text-center">
+                      <span
+                        className="text-cyan-blue-azure mt-[5px] underline cursor-pointer hover:text-blue-2"
+                        onClick={() => handleClick("addProductForCombo")}
+                      >
+                        Thêm sản phẩm
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  };
+  const handleClick = (type) => {
+    switch (type) {
+      case "addProductForCombo": {
+        setnumberProductList(numberProductList + 1);
+        setproductList([...productList, {}]);
+        break;
+      }
+      default:
+        break;
     }
   };
   return (

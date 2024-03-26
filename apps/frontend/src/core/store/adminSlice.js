@@ -137,6 +137,56 @@ export const adminSlice = createSlice({
         categoryName: "Thịt",
       },
     ],
+    comboList: [
+      {
+        comboId: "1",
+        comboName: "Combo 1",
+        description: "Description Combo 1",
+        discountPercentage: "10%",
+        price: "200000",
+        products: [
+          {
+            productId: "1",
+            productName: "Hamburger",
+            quantity: 1,
+          },
+          {
+            productId: "2",
+            productName: "Gà rán",
+            quantity: 1,
+          },
+          {
+            productId: "3",
+            productName: "Coca cola",
+            quantity: 1,
+          },
+        ],
+      },
+      {
+        comboId: "2",
+        comboName: "Combo 2",
+        description: "Description Combo 2",
+        discountPercentage: "20%",
+        price: "300000",
+        products: [
+          {
+            productId: "1",
+            productName: "Hamburger",
+            quantity: 1,
+          },
+          {
+            productId: "2",
+            productName: "Gà rán",
+            quantity: 1,
+          },
+          {
+            productId: "3",
+            productName: "Coca cola",
+            quantity: 2,
+          },
+        ],
+      },
+    ],
     isAddProductSuccess: false,
     isEditProductSuccess: false,
   },
@@ -258,6 +308,66 @@ export const adminSlice = createSlice({
         });
       }
     },
+
+    deleteCombo: (state, action) => {
+      const index = state.comboList.findIndex(
+        (product) => product.comboId === action.payload
+      );
+      if (index !== -1) {
+        state.comboList.splice(index, 1);
+        notification({
+          message: "Xoá thành công",
+          duration: 3000,
+        });
+        sessionStorageHandle("remove", "comboId");
+      } else {
+        notification({
+          type: "error",
+          message: "Xoá thất bại",
+          duration: 3000,
+        });
+      }
+    },
+    deleteManyCombo: (state, action) => {
+      const filter = state.comboList.filter(
+        (item) => !action.payload.includes(item.comboId)
+      );
+      state.comboList = filter;
+      notification({
+        message: "Xoá thành công",
+        duration: 3000,
+      });
+    },
+    addCombo: (state, action) => {
+      const combo = {
+        comboId: state.comboList.length,
+        ...action.payload,
+      };
+      state.comboList.push(combo);
+      notification({
+        type: "success",
+        message: "Thêm loại sản phẩm thành công",
+        duration: 3000,
+      });
+    },
+    editCombo: (state, action) => {
+      const index = state.comboList.findIndex(
+        (combo) => combo.comboId === action.payload.comboId
+      );
+      if (index !== -1) {
+        state.comboList[index] = action.payload;
+        notification({
+          message: "Sửa combo thành công",
+          duration: 3000,
+        });
+      } else {
+        notification({
+          type: "error",
+          message: "Sửa combo thất bại",
+          duration: 3000,
+        });
+      }
+    },
   },
 });
 
@@ -271,6 +381,10 @@ export const {
   deleteManyCategory,
   addCategory,
   editCategory,
+  deleteCombo,
+  deleteManyCombo,
+  addCombo,
+  editCombo,
 } = adminSlice.actions;
 
 export default adminSlice.reducer;
