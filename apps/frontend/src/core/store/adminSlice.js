@@ -142,7 +142,7 @@ export const adminSlice = createSlice({
         comboId: "1",
         comboName: "Combo 1",
         description: "Description Combo 1",
-        discountPercentage: "10%",
+        discountPercentage: "10",
         price: "200000",
         products: [
           {
@@ -166,7 +166,7 @@ export const adminSlice = createSlice({
         comboId: "2",
         comboName: "Combo 2",
         description: "Description Combo 2",
-        discountPercentage: "20%",
+        discountPercentage: "20",
         price: "300000",
         products: [
           {
@@ -193,7 +193,7 @@ export const adminSlice = createSlice({
   reducers: {
     addProduct: (state, action) => {
       const product = {
-        ProductID: state.productList.length,
+        ProductID: state.productList.length + "",
         ...action.payload,
       };
       state.productList.push(product);
@@ -280,7 +280,7 @@ export const adminSlice = createSlice({
     },
     addCategory: (state, action) => {
       const category = {
-        categoryId: state.categoryList.length,
+        categoryId: state.categoryList.length + "",
         ...action.payload,
       };
       state.categoryList.push(category);
@@ -340,7 +340,7 @@ export const adminSlice = createSlice({
     },
     addCombo: (state, action) => {
       const combo = {
-        comboId: state.comboList.length,
+        comboId: state.comboList.length + "",
         ...action.payload,
       };
       state.comboList.push(combo);

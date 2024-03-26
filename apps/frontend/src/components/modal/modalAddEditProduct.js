@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import {
   isNumber,
@@ -6,8 +7,10 @@ import {
 } from "../../core/common/function";
 import {
   addCategory,
+  addCombo,
   addProduct,
   editCategory,
+  editCombo,
   editProduct,
 } from "../../core/store/adminSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,9 +33,9 @@ const ModalAddEditProduct = ({
   const [quantity, setQuantity] = useState(0);
   const [category, setCategory] = useState([]);
   const [options, setOptions] = useState([]);
-  const [productList, setproductList] = useState([{}]);
+  const [productListCombo, setProductListCombo] = useState([{}]);
   const [numberProductList, setnumberProductList] = useState(1);
-  const [percent, setpercent] = useState("");
+  const [percent, setPercent] = useState("");
   const storeAdmin = useSelector((state) => state.admin);
   const clearData = () => {
     setName("");
@@ -40,13 +43,16 @@ const ModalAddEditProduct = ({
     setPrice("");
     setQuantity(0);
     setCategory([]);
+    setProductListCombo({});
+    setnumberProductList(1);
+    setPercent("");
   };
 
   const confirmAction = async (type, data) => {
     switch (type) {
       case 1: {
         // add product
-        if (checkValidate()) {
+        if (checkValidate(type)) {
           const convertDataCategory = category.map((data) => {
             return {
               categoryId: data.value,
@@ -76,7 +82,7 @@ const ModalAddEditProduct = ({
       }
       case 2: {
         // edit product
-        if (checkValidate()) {
+        if (checkValidate(type)) {
           const id = sessionStorageHandle("get", "editProductId");
           const convertDataCategory = category.map((data) => {
             return {
@@ -108,7 +114,7 @@ const ModalAddEditProduct = ({
       }
       case 3: {
         // add category
-        if (name !== "") {
+        if (checkValidate(type)) {
           const params = {
             categoryName: name,
           };
@@ -126,7 +132,7 @@ const ModalAddEditProduct = ({
       }
       case 4: {
         // edit category
-        if (name !== "") {
+        if (checkValidate(type)) {
           const id = sessionStorageHandle("get", "editCategoryId");
           const params = {
             categoryId: id,
@@ -139,6 +145,115 @@ const ModalAddEditProduct = ({
           notification({
             type: "error",
             message: "Vui lòng nhập đầy đủ thông tin",
+            duration: 3000,
+          });
+        }
+        break;
+      }
+      case 5: {
+        // add combo
+        if (checkValidate(type)) {
+          const filteredInput = productListCombo.filter(
+            (obj) =>
+              obj.productId &&
+              obj.productId !== undefined &&
+              obj.productId !== "" &&
+              obj.quantity
+          );
+          const productListTemp = filteredInput.reduce(
+            (accumulator, currentValue) => {
+              const productId = currentValue.productId;
+              const quantity = currentValue.quantity;
+              if (accumulator[productId]) {
+                accumulator[productId].quantity += quantity;
+              } else {
+                accumulator[productId] = {
+                  productId: productId,
+                  quantity: quantity,
+                };
+              }
+              return accumulator;
+            },
+            {}
+          );
+          Object.values(productListTemp).forEach((product) => {
+            const found = storeAdmin.productList.find(
+              (item) => item.ProductID === product.productId
+            );
+            if (found) {
+              product.productName = found.ProductName;
+            }
+          });
+          const params = {
+            comboName: name,
+            description: description,
+            price: price,
+            discountPercentage: percent,
+            products: Object.values(productListTemp),
+          };
+          await dispatch(addCombo(params));
+          clearData();
+          onClose();
+        } else {
+          notification({
+            type: "error",
+            message: "Vui lòng nhập đầy đủ thông tin và có ít nhất 1 sản phẩm",
+            duration: 3000,
+          });
+        }
+        break;
+      }
+
+      case 6: {
+        // edit combo
+        if (checkValidate(type)) {
+          const id = sessionStorageHandle("get", "editComboId");
+          const filteredInput = productListCombo.filter(
+            (obj) =>
+              obj.productId &&
+              obj.productId !== undefined &&
+              obj.productId !== "" &&
+              obj.quantity
+          );
+          const productListTemp = filteredInput.reduce(
+            (accumulator, currentValue) => {
+              const productId = currentValue.productId;
+              const quantity = currentValue.quantity;
+              if (accumulator[productId]) {
+                accumulator[productId].quantity += quantity;
+              } else {
+                accumulator[productId] = {
+                  productId: productId,
+                  quantity: quantity,
+                };
+              }
+              return accumulator;
+            },
+            {}
+          );
+          Object.values(productListTemp).forEach((product) => {
+            const found = storeAdmin.productList.find(
+              (item) => item.ProductID === product.productId
+            );
+            if (found) {
+              product.productName = found.ProductName;
+            }
+          });
+          const params = {
+            comboId: id,
+            comboName: name,
+            description: description,
+            price: price,
+            discountPercentage: percent,
+            products: Object.values(productListTemp),
+          };
+          await dispatch(editCombo(params));
+          clearData();
+          onClose();
+        } else {
+          notification({
+            type: "error",
+            message: "Vui lòng nhập đầy đủ thông tin và có ít nhất 1 sản phẩm",
             duration: 3000,
           });
         }
@@ -215,7 +330,31 @@ const ModalAddEditProduct = ({
         });
       }
     }
-  }, [typeAction, isOpen, storeAdmin.productList, storeAdmin.categoryList]);
+    if (isOpen && typeAction === 6) {
+      const id = sessionStorageHandle("get", "editComboId");
+      const filter = storeAdmin.comboList?.filter(
+        (combo) => combo.comboId === id
+      );
+      if (filter) {
+        setName(filter[0].comboName);
+        setPercent(filter[0].discountPercentage);
+        setDescription(filter[0].description);
+        setPrice(filter[0].price);
+        const temp = filter[0].products.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        }));
+        setProductListCombo(temp);
+        setnumberProductList(filter[0].products.length);
+      } else {
+        notification({
+          type: "error",
+          message: "Không tìm thấy thông tin combo này",
+          duration: 3000,
+        });
+      }
+    }
+  }, [typeAction, isOpen]);
   useEffect(() => {
     const temp = storeAdmin.categoryList.map((item) => ({
       value: item.categoryId,
@@ -233,44 +372,63 @@ const ModalAddEditProduct = ({
       } else if (type === "percent") {
         if (!isNaN(parseInt(dataInput))) {
           if (parseInt(dataInput) > 100) {
-            setpercent("100");
+            setPercent("100");
             return;
           } else if (parseInt(dataInput) < 0) {
-            setpercent("0");
+            setPercent("0");
             return;
           } else {
-            setpercent(dataInput);
+            setPercent(dataInput);
           }
         } else {
-          setpercent("0");
+          setPercent("0");
         }
       } else if (type === "productQuantity") {
         // anotherData is index of productList
-        // const temp = isNaN(parseInt(dataInput)) ? 0 : parseInt(dataInput);
-        // const tempList = [...productList];
-        // tempList[anotherData].quantity = temp;
-        // setQuantity(isNaN(parseInt(dataInput)) ? 0 : parseInt(dataInput));
+        const temp = isNaN(parseInt(dataInput)) ? 0 : parseInt(dataInput);
+        const tempList = [...productListCombo];
+        tempList[anotherData].quantity = temp;
+        setProductListCombo(tempList);
       }
     }
   };
-  const checkValidate = () => {
-    return !(
-      name === "" ||
-      price === "" ||
-      quantity === 0 ||
-      category.length === 0
-    );
+  const checkValidate = (type) => {
+    switch (type) {
+      case 1:
+      case 2: {
+        return (
+          name !== "" && price === "" && quantity !== 0 && category.length !== 0
+        );
+      }
+      case 3:
+      case 4: {
+        return name !== "";
+      }
+      case 5:
+      case 6: {
+        const filteredInput = productListCombo.filter(
+          (obj) =>
+            obj.productId &&
+            obj.productId !== undefined &&
+            obj.productId !== "" &&
+            obj.quantity
+        );
+        return (
+          name !== "" &&
+          price !== "" &&
+          percent !== "" &&
+          filteredInput.length > 0
+        );
+      }
+      default:
+        return false;
+    }
   };
   const handleChange = (event, index) => {
-    console.log(event.target.value);
-    console.log("index: " + index);
-    const temp = [...productList];
+    const temp = [...productListCombo];
     temp[index].productId = event.target.value;
-    setproductList(temp);
+    setProductListCombo(temp);
   };
-  useEffect(() => {
-    console.log(productList);
-  }, [productList]);
   const renderNumberProductList = () => {
     const result = [];
     for (let i = 0; i < numberProductList; i++) {
@@ -283,9 +441,10 @@ const ModalAddEditProduct = ({
               </p>
               <MuiSelect
                 className="w-[249px] h-[50px] border-dark-electric-blue border-[1px] border-solid"
-                value={productList[i]?.productId ?? ""}
+                value={productListCombo[i]?.productId ?? ""}
                 onChange={(ev) => handleChange(ev, i)}
               >
+                <MenuItem className="h-[36px]" value=""></MenuItem>
                 {storeAdmin.productList.map((item, index) => {
                   return (
                     <MenuItem key={index} value={item.ProductID}>
@@ -301,18 +460,10 @@ const ModalAddEditProduct = ({
                 Số lượng <span className="text-red">*</span>
               </p>
               <input
-                value={productList[i]?.quantity ?? 0}
-                onChange={(e) => onlyInputNumber(e, "productQuantity")}
+                value={productListCombo[i]?.quantity ?? 0}
+                onChange={(e) => onlyInputNumber(e, "productQuantity", i)}
                 className="border-dark-electric-blue border-[1px] border-solid h-[50px] w-full p-[18px]"
               ></input>
-              {/* <p className="mb-[10px]">
-                Phần trăm giảm <span className="text-red">*</span>
-              </p>
-              <input
-                value={percent}
-                onChange={(e) => onlyInputNumber(e, "percent")}
-                className="border-dark-electric-blue border-[1px] border-solid h-[50px] w-full p-[18px]"
-              ></input> */}
             </div>
           </div>
         </div>
@@ -440,7 +591,7 @@ const ModalAddEditProduct = ({
                 {typeAction === 1 ? "Thêm combo" : "Sửa thông tin combo"}
               </h1>
               <div className="flex justify-center items-center">
-                <div className="p-[20px] w-[600px] m-h-[550px] overflow-x-scroll">
+                <div className="p-[20px] w-[600px] max-h-[470px] overflow-x-scroll">
                   <div className="">
                     <div className="mb-[5px]">
                       <p className="mb-[10px]">
@@ -451,6 +602,14 @@ const ModalAddEditProduct = ({
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       ></input>
+                    </div>
+                    <div>
+                      <p className="mb-[10px]">Mô Tả</p>
+                      <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="border-dark-electric-blue border-[1px] border-solid h-[120x] w-full p-[18px]"
+                      ></textarea>
                     </div>
                     <div className="flex">
                       <div className="mb-[5px] w-1/2">
@@ -497,7 +656,12 @@ const ModalAddEditProduct = ({
     switch (type) {
       case "addProductForCombo": {
         setnumberProductList(numberProductList + 1);
-        setproductList([...productList, {}]);
+        setProductListCombo([...productListCombo, {}]);
+        break;
+      }
+      case "onClose": {
+        clearData();
+        onClose();
         break;
       }
       default:
@@ -523,8 +687,8 @@ const ModalAddEditProduct = ({
               &#8203;
             </span>
 
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-[37rem] sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:mt-8 sm:align-middle sm:max-w-[37rem] sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 max-h-[550px]">
                 {renderUI()}
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

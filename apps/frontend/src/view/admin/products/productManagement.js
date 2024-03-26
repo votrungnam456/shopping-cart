@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./productManagement.css";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   formatMoney,
@@ -87,13 +86,17 @@ const ProductManagement = () => {
   const renderProductCombo = (products) => {
     const temp = [];
     for (let index = 0; index < maxLengthProductCombo(); index++) {
-      temp.push(
-        <TableCell key={index}>
-          {products[index]?.productName ?? ""}
-          <br />
-          {"Số lượng: " + products[index]?.quantity ?? ""}
-        </TableCell>
-      );
+      if (products[index]) {
+        temp.push(
+          <TableCell key={index}>
+            {products[index]?.productName ?? ""}
+            <br />
+            {"Số lượng: " + products[index]?.quantity ?? ""}
+          </TableCell>
+        );
+      } else {
+        temp.push(<TableCell key={index}></TableCell>);
+      }
     }
     return temp;
   };
@@ -326,7 +329,7 @@ const ProductManagement = () => {
   return (
     <>
       <div>
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 0 }} className="!max-w-none">
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 0 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
