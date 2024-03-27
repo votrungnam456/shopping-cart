@@ -1,30 +1,79 @@
-const Login = () => {
+import { useState } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { useDispatch } from "react-redux";
+import { login } from "../../core/store/authSlice";
+
+export default function Login() {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const handleLogin = () => {
+    const params = {
+      userName,
+      password,
+    };
+    dispatch(login(params));
+  };
+
   return (
-    <div className="bg-gray-100 flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded shadow-md w-80">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
-        <div className="mb-4">
-          <input
-            type="text"
-            id="username"
-            placeholder="Username"
-            className="w-full px-4 py-2 border rounded"
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Đăng nhập admin
+        </Typography>
+        <Box component="form" noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={userName}
+            onChange={(ev) => setUserName(ev.target.value)}
           />
-        </div>
-        <div className="mb-6">
-          <input
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
             type="password"
             id="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded"
+            autoComplete="current-password"
+            value={password}
+            onChange={(ev) => setPassword(ev.target.value)}
           />
-        </div>
-        <button className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-          Login
-        </button>
-      </div>
-    </div>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => handleLogin()}
+          >
+            Đăng nhập
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
-};
-
-export default Login;
+}

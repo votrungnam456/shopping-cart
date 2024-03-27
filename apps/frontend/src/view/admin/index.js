@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import SlideBarAdmin from "../../components/admin/slideBar";
 import routesAdmin from "../../core/routes/routeAdmin";
 import Login from "../auth/login";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import IsLoginAdmin from "../../components/auth/isLoginAdmin";
 import { Box, Toolbar } from "@mui/material";
 import HeaderAdmin from "../../components/admin/header";
@@ -43,25 +43,27 @@ const AdminMaster = () => {
           <Route path="/login" exact={true} element={<Login></Login>}></Route>
         </Route>
       </Routes>
-      <Box sx={{ display: "flex" }}>
-        <HeaderAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
-        <SlideBarAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
-          <Routes>{setRoutes()}</Routes>
+      <div className={!isLoggedIn ? "hidden" : ""}>
+        <Box sx={{ display: "flex" }}>
+          <HeaderAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
+          <SlideBarAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto",
+            }}
+          >
+            <Toolbar />
+            <Routes>{setRoutes()}</Routes>
+          </Box>
         </Box>
-      </Box>
+      </div>
     </div>
   );
 };
