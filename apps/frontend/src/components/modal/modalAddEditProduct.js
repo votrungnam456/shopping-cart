@@ -43,7 +43,7 @@ const ModalAddEditProduct = ({
     setPrice("");
     setQuantity(0);
     setCategory([]);
-    setProductListCombo({});
+    setProductListCombo([{}]);
     setnumberProductList(1);
     setPercent("");
   };
@@ -60,11 +60,11 @@ const ModalAddEditProduct = ({
             };
           });
           const params = {
-            ProductName: name,
-            Description: description,
-            Price: price,
-            StockQuantity: quantity,
-            Category: convertDataCategory,
+            productName: name,
+            description: description,
+            price: price,
+            stockQuantity: quantity,
+            category: convertDataCategory,
           };
           await dispatch(addProduct(params));
           // if (storeAdmin.isAddProductSuccess) {
@@ -91,12 +91,12 @@ const ModalAddEditProduct = ({
             };
           });
           const params = {
-            ProductID: id,
-            ProductName: name,
-            Description: description,
-            Price: price,
-            StockQuantity: quantity,
-            Category: convertDataCategory,
+            productId: id,
+            productName: name,
+            description: description,
+            price: price,
+            stockQuantity: quantity,
+            category: convertDataCategory,
           };
           await dispatch(editProduct(params));
           // if (storeAdmin.isEditProductSuccess) {
@@ -178,10 +178,10 @@ const ModalAddEditProduct = ({
           );
           Object.values(productListTemp).forEach((product) => {
             const found = storeAdmin.productList.find(
-              (item) => item.ProductID === product.productId
+              (item) => item.productId === product.productId
             );
             if (found) {
-              product.productName = found.ProductName;
+              product.productName = found.productName;
             }
           });
           const params = {
@@ -233,10 +233,10 @@ const ModalAddEditProduct = ({
           );
           Object.values(productListTemp).forEach((product) => {
             const found = storeAdmin.productList.find(
-              (item) => item.ProductID === product.productId
+              (item) => item.productId === product.productId
             );
             if (found) {
-              product.productName = found.ProductName;
+              product.productName = found.productName;
             }
           });
           const params = {
@@ -285,15 +285,15 @@ const ModalAddEditProduct = ({
     if (isOpen && typeAction === 2) {
       const id = sessionStorageHandle("get", "editProductId");
       const filter = storeAdmin.productList?.filter(
-        (product) => product.ProductID === id
+        (product) => product.productId === id
       );
       if (filter) {
-        setName(filter[0].ProductName);
-        setDescription(filter[0].Description);
-        setPrice(filter[0].Price);
-        setQuantity(filter[0].StockQuantity);
+        setName(filter[0].productName);
+        setDescription(filter[0].description);
+        setPrice(filter[0].price);
+        setQuantity(filter[0].stockQuantity);
         setCategory(
-          filter[0].Category.map((item) => {
+          filter[0].category.map((item) => {
             return {
               value: item.categoryId,
               label: item.categoryName,
@@ -397,7 +397,7 @@ const ModalAddEditProduct = ({
       case 1:
       case 2: {
         return (
-          name !== "" && price === "" && quantity !== 0 && category.length !== 0
+          name !== "" && price !== "" && quantity !== 0 && category.length !== 0
         );
       }
       case 3:
@@ -447,8 +447,8 @@ const ModalAddEditProduct = ({
                 <MenuItem className="h-[36px]" value=""></MenuItem>
                 {storeAdmin.productList.map((item, index) => {
                   return (
-                    <MenuItem key={index} value={item.ProductID}>
-                      {item.ProductName}
+                    <MenuItem key={index} value={item.productId}>
+                      {item.productName}
                     </MenuItem>
                   );
                 })}
@@ -700,7 +700,7 @@ const ModalAddEditProduct = ({
                   {buttonAction}
                 </button>
                 <button
-                  onClick={onClose}
+                  onClick={() => handleClick("onClose")}
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >

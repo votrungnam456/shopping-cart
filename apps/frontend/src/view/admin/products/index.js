@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./productManagement.css";
+import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   formatMoney,
@@ -59,8 +59,8 @@ const ProductManagement = () => {
   const maxLengthCategory = () => {
     let temp = 0;
     listProduct.forEach((product) => {
-      if (product.Category.length > temp) {
-        temp = product.Category.length;
+      if (product.category.length > temp) {
+        temp = product.category.length;
       }
     });
     return temp;
@@ -364,16 +364,16 @@ const ProductManagement = () => {
                               className="checkbox"
                               type="checkbox"
                               onChange={(ev) =>
-                                handleCheckboxChange(ev, product.ProductID)
+                                handleCheckboxChange(ev, product.productId)
                               }
-                              checked={listCheckbox.includes(product.ProductID)}
-                              value={product.ProductID}
+                              checked={listCheckbox.includes(product.productId)}
+                              value={product.productId}
                             />
                           </TableCell>
-                          <TableCell>{product.ProductName}</TableCell>
-                          <TableCell>{formatMoney(product.Price)}</TableCell>
-                          <TableCell>{product.StockQuantity}</TableCell>
-                          {renderCategory(product.Category)}
+                          <TableCell>{product.productName}</TableCell>
+                          <TableCell>{formatMoney(product.price)}</TableCell>
+                          <TableCell>{product.stockQuantity}</TableCell>
+                          {renderCategory(product.category)}
                           <TableCell>
                             {" "}
                             <div className="flex justify-center">
@@ -382,7 +382,7 @@ const ProductManagement = () => {
                                 src="/icon/iconPen.png"
                                 className="w-[30px] cursor-pointer"
                                 onClick={() =>
-                                  handleClick("editProduct", product.ProductID)
+                                  handleClick("editProduct", product.productId)
                                 }
                               ></img>
                               <img
@@ -392,7 +392,7 @@ const ProductManagement = () => {
                                 onClick={() =>
                                   handleClick(
                                     "deleteProductConfirm",
-                                    product.ProductID
+                                    product.productId
                                   )
                                 }
                               ></img>

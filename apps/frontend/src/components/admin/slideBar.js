@@ -16,6 +16,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router-dom";
+import { localStorageHandle } from "../../core/common/function";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../core/store/authSlice";
 
 const drawerWidth = 240;
 const Drawer = styled(MuiDrawer, {
@@ -47,6 +50,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function SlideBar({ openDrawer, toggleDrawer }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const toggle = () => {
     toggleDrawer();
   };
@@ -82,12 +86,22 @@ export default function SlideBar({ openDrawer, toggleDrawer }) {
       label: "Truy cập hệ thống",
       icon: <KeyIcon></KeyIcon>,
     },
+    {
+      name: "Logout",
+      path: "/login",
+      label: "Đăng xuất",
+      icon: <KeyIcon></KeyIcon>,
+    },
   ];
   const renderSlideBar = () => {
     return slideBarList.map((item, index) => {
       return (
         <ListItemButton
           onClick={() => {
+            if (item.name === "Logout") {
+              localStorageHandle("remove", "loginAdmin");
+              dispatch(logout());
+            }
             navigate(`/admin${item.path}`);
           }}
           key={index}

@@ -6,13 +6,13 @@ export const adminSlice = createSlice({
   initialState: {
     productList: [
       {
-        ProductID: "1",
-        ProductName: "Hamburger",
-        Description:
+        productId: "1",
+        productName: "Hamburger",
+        description:
           "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-        Price: "200000",
-        StockQuantity: 100,
-        Category: [
+        price: "200000",
+        stockQuantity: 100,
+        category: [
           {
             categoryId: "1",
             categoryName: "Bánh",
@@ -28,13 +28,13 @@ export const adminSlice = createSlice({
         ],
       },
       {
-        ProductID: "2",
-        ProductName: "Gà rán",
-        Description:
+        productId: "2",
+        productName: "Gà rán",
+        description:
           "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-        Price: "100000",
-        StockQuantity: 100,
-        Category: [
+        price: "100000",
+        stockQuantity: 100,
+        category: [
           {
             categoryId: "3",
             categoryName: "Đồ chiên",
@@ -46,13 +46,13 @@ export const adminSlice = createSlice({
         ],
       },
       {
-        ProductID: "3",
-        ProductName: "Coca cola",
-        Description:
+        productId: "3",
+        productName: "Coca cola",
+        description:
           "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-        Price: "150000",
-        StockQuantity: 100,
-        Category: [
+        price: "150000",
+        stockQuantity: 100,
+        category: [
           {
             categoryId: "2",
             categoryName: "Nước uống",
@@ -61,13 +61,13 @@ export const adminSlice = createSlice({
       },
 
       {
-        ProductID: "4",
-        ProductName: "Hamburger",
-        Description:
+        productId: "4",
+        productName: "Hamburger 2",
+        description:
           "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-        Price: "200000",
-        StockQuantity: 100,
-        Category: [
+        price: "200000",
+        stockQuantity: 100,
+        category: [
           {
             categoryId: "1",
             categoryName: "Bánh",
@@ -83,13 +83,13 @@ export const adminSlice = createSlice({
         ],
       },
       {
-        ProductID: "5",
-        ProductName: "Gà rán",
-        Description:
+        productId: "5",
+        productName: "Gà rán 2",
+        description:
           "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-        Price: "100000",
-        StockQuantity: 100,
-        Category: [
+        price: "100000",
+        stockQuantity: 100,
+        category: [
           {
             categoryId: "3",
             categoryName: "Đồ chiên",
@@ -101,13 +101,13 @@ export const adminSlice = createSlice({
         ],
       },
       {
-        ProductID: "6",
-        ProductName: "Coca cola",
-        Description:
+        productId: "6",
+        productName: "Coca cola 2",
+        description:
           "Áo thun nam dài tay, chất liệu cotton, phong cách trẻ trung và thoải mái.",
-        Price: "150000",
-        StockQuantity: 100,
-        Category: [
+        price: "150000",
+        stockQuantity: 100,
+        category: [
           {
             categoryId: "2",
             categoryName: "Nước uống",
@@ -141,7 +141,7 @@ export const adminSlice = createSlice({
       {
         comboId: "1",
         comboName: "Combo 1",
-        description: "Description Combo 1",
+        description: "description Combo 1",
         discountPercentage: "10",
         price: "200000",
         products: [
@@ -165,7 +165,7 @@ export const adminSlice = createSlice({
       {
         comboId: "2",
         comboName: "Combo 2",
-        description: "Description Combo 2",
+        description: "description Combo 2",
         discountPercentage: "20",
         price: "300000",
         products: [
@@ -187,13 +187,120 @@ export const adminSlice = createSlice({
         ],
       },
     ],
+    reviewsList: [
+      {
+        productId: "1",
+        productName: "Hamburger",
+        reviews: [
+          {
+            id: "1",
+            userId: "1",
+            name: "John Doe",
+            rating: 5,
+            comment: "Bánh này ngon",
+            date: "2024-03-27",
+            hidden: false,
+          },
+          {
+            id: "2",
+            userId: "2",
+            name: "NamVT",
+            rating: 4,
+            comment: "Bánh này ổn, riêng thịt thì hơi mặn",
+            date: "2024-03-27",
+            hidden: false,
+          },
+        ],
+      },
+      {
+        productId: "2",
+        productName: "Gà rán",
+        reviews: [
+          {
+            id: "1",
+            userId: "1",
+            name: "John Doe",
+            rating: 3,
+            comment: "Món này ở mức tạm thôi",
+            date: "2024-03-27",
+            hidden: false,
+          },
+          {
+            id: "2",
+            userId: "3",
+            name: "DatQNT",
+            rating: 1,
+            comment: "Nhiều dầu quá, cắn vào dầu chạy nhiều",
+            date: "2024-03-27",
+            hidden: false,
+          },
+          {
+            id: "2",
+            userId: "1",
+            name: "NamVT",
+            rating: 5,
+            comment: "Comment này màn tính chất nhận xu",
+            date: "2024-03-27",
+            hidden: false,
+          },
+        ],
+      },
+      {
+        productId: "3",
+        productName: "Coca cola",
+        reviews: [
+          {
+            id: "1",
+            userId: "1",
+            name: "John Doe",
+            rating: 2,
+            comment: "Món này ở mức tạm thôi",
+            date: "2024-03-27",
+            hidden: false,
+          },
+          {
+            id: "2",
+            userId: "3",
+            name: "DatQNT",
+            rating: 4,
+            comment: "Ợ Ợ",
+            date: "2024-03-27",
+            hidden: false,
+          },
+          {
+            id: "2",
+            userId: "1",
+            name: "NamVT",
+            rating: 5,
+            comment: "Comment này màn tính chất nhận xu",
+            date: "2024-03-27",
+            hidden: false,
+          },
+        ],
+      },
+      {
+        productId: "4",
+        productName: "Hamburger 2",
+        reviews: [],
+      },
+      {
+        productId: "5",
+        productName: "Gà rán 2",
+        reviews: [],
+      },
+      {
+        productId: "6",
+        productName: "Coca cola 2",
+        reviews: [],
+      },
+    ],
     isAddProductSuccess: false,
     isEditProductSuccess: false,
   },
   reducers: {
     addProduct: (state, action) => {
       const product = {
-        ProductID: state.productList.length + "",
+        productId: state.productList.length + "",
         ...action.payload,
       };
       state.productList.push(product);
@@ -206,7 +313,7 @@ export const adminSlice = createSlice({
     },
     editProduct: (state, action) => {
       const index = state.productList.findIndex(
-        (product) => product.ProductID === action.payload.ProductID
+        (product) => product.productId === action.payload.productId
       );
       if (index !== -1) {
         state.productList[index] = action.payload;
@@ -226,7 +333,7 @@ export const adminSlice = createSlice({
     },
     deleteProduct: (state, action) => {
       const index = state.productList.findIndex(
-        (product) => product.ProductID === action.payload
+        (product) => product.productId === action.payload
       );
       if (index !== -1) {
         state.productList.splice(index, 1);
@@ -245,7 +352,7 @@ export const adminSlice = createSlice({
     },
     deleteManyProduct: (state, action) => {
       const filter = state.productList.filter(
-        (item) => !action.payload.includes(item.ProductID)
+        (item) => !action.payload.includes(item.productId)
       );
       state.productList = filter;
     },

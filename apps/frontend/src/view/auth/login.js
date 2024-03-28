@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -7,21 +7,32 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../core/store/authSlice";
+import { useNavigate } from "react-router-dom";
+import { localStorageHandle } from "../../core/common/function";
 
 export default function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loggedIn } = useSelector((state) => state.auth);
   const handleLogin = () => {
     const params = {
       userName,
-      password,
+      password: password.toLowerCase(),
     };
     dispatch(login(params));
+    navigate("/admin");
   };
-
+  useEffect(() => {
+    const isLogin = localStorageHandle("get", "loginAdmin");
+    if (isLogin) {
+      navigate("/admin");
+    }
+  }, []);
+  useEffect(() => {}, [loggedIn, navigate]);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

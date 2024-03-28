@@ -1,49 +1,35 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import SlideBarAdmin from "../../components/admin/slideBar";
 import routesAdmin from "../../core/routes/routeAdmin";
-import Login from "../auth/login";
-import { useState } from "react";
-import IsLoginAdmin from "../../components/auth/isLoginAdmin";
+import { useEffect, useState } from "react";
 import { Box, Toolbar } from "@mui/material";
 import HeaderAdmin from "../../components/admin/header";
+import { localStorageHandle } from "../../core/common/function";
 
 const AdminMaster = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
   const setRoutes = () => {
     const result = routesAdmin.map((route, index) => {
       const { path, exact, main } = route;
       return (
-        <Route
-          key={index}
-          exact
-          path="/"
-          element={<IsLoginAdmin isLoggedIn={isLoggedIn}></IsLoginAdmin>}
-        >
-          <Route path={path} exact={exact} element={main}></Route>
-        </Route>
+        <Route key={index} path={path} exact={exact} element={main}></Route>
       );
     });
     return result;
   };
-
+  useEffect(() => {
+    const isLogin = localStorageHandle("get", "loginAdmin");
+    if (!isLogin) {
+      navigate("/admin/login");
+    }
+  }, []);
   const toggleDrawer = () => {
     setOpen(!open);
   };
   return (
     <div>
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={
-            <IsLoginAdmin isLoggedIn={isLoggedIn} reverse={true}></IsLoginAdmin>
-          }
-        >
-          <Route path="/login" exact={true} element={<Login></Login>}></Route>
-        </Route>
-      </Routes>
-      <div className={!isLoggedIn ? "hidden" : ""}>
+      <div>
         <Box sx={{ display: "flex" }}>
           <HeaderAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
           <SlideBarAdmin openDrawer={open} toggleDrawer={toggleDrawer} />
